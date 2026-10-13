@@ -75,6 +75,7 @@ endif()
 
 juce_add_plugin(CrunchyPy
     COMPANY_NAME "Yahia Kemari"
+    BUNDLE_ID com.yahiakemari.crunchypy
     PLUGIN_MANUFACTURER_CODE YhKm
     PLUGIN_CODE MbfB
     FORMATS ${CRUNCHYPY_FORMATS}

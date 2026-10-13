@@ -1,4 +1,4 @@
-# CrunchyPy 🎸⚡
+# CrunchyPy
 ### A Neural & Physical Tribute to the Mesa/Boogie® Mark IIC+ (and the Mythical "++" Mod)
 
 > *"Man, that little thing really boogies!"*  
@@ -10,7 +10,7 @@ Available as **VST3** and **Standalone** on **Windows** and **Linux** (macOS com
 
 ---
 
-## 📖 The Legend: Why the Mark IIC+ is the Holy Grail
+##  The Legend: Why the Mark IIC+ is the Holy Grail
 
 In the pantheon of guitar tone, there are legendary amplifiers, and then there is the **Mark IIC+**.
 
@@ -88,7 +88,7 @@ CrunchyPy mirrors the exact physical signal topology of the amplifier:
 
 ---
 
-## 🎛 The Circuit & Controls in Detail
+##  The Circuit & Controls in Detail
 
 ### 1. The Preamp: Pre-Gain Tone Stack & Tube Cascade
 Unlike a Marshall JCM800 or Peavey 5150 where the tone stack sits *after* the preamp distortion stages, the Mark series tone stack sits **early in the circuit** (right after V1):
@@ -142,7 +142,7 @@ CrunchyPy's EQ filters were calibrated directly against LiveSPICE circuit simula
 
 ---
 
-## 🎸 The Dialing Bible: How to Get The Tones
+## The Dialing Bible: How to Get The Tones
 
 Dialing in a Mark IIC+ is fundamentally different from dialing in a Marshall or 5150. **Remember: Treble adds gain, Bass adds mud, and the Graphic EQ shapes the world.**
 
@@ -192,7 +192,7 @@ Dialing in a Mark IIC+ is fundamentally different from dialing in a Marshall or 
 
 ---
 
-## 🛠 Building from Source
+##  Building from Source
 
 ### Prerequisites
 * **CMake** (v3.22 or higher)
@@ -243,7 +243,7 @@ On Linux:
 
 ---
 
-## 🚀 Performance & Audio Engine Specs
+##  Performance & Audio Engine Specs
 
 * **Zero Latency**: Native 48 kHz operation has strictly **0 samples of latency**.
 * **Bandlimited Resampling**: Running at 44.1 kHz, 96 kHz, or 192 kHz? CrunchyPy transparently employs a low-latency Kaiser-sinc resampler ($M=24$) so the neural networks and physical filter tanks always execute on their native 48 kHz clock.
@@ -252,7 +252,7 @@ On Linux:
 
 ---
 
-## 📜 Credits & Acknowledgments
+##  Credits & Acknowledgments
 
 * **Architecture, Preamp Circuit & Lead Developer**:  
   **Yahia Kemari** ([@Yahiake](https://github.com/Yahiake))  
