@@ -1,7 +1,7 @@
 # CrunchyPy
 ### A Neural & Physical Tribute to the Mesa/Boogie® Mark IIC+ (and the Mythical "++" Mod)
 
-> *"Man, that little thing really boogies!"*  
+> *"Shit, Man, that little thing really boogies!"*  
 > — Carlos Santana, playing Randall Smith's hot-rodded Princeton in 1969.
 
 Built with modern C++, [JUCE](https://github.com/juce-framework/JUCE), and [RTNeural](https://github.com/Yahiake/RTNeural), **CrunchyPy** is an open-source, component-accurate real-time simulation of the holy grail of high-gain guitar amplification: the **Mesa/Boogie® Mark IIC+**, complete with the factory **"++" hot-rod gain mod**.
@@ -32,7 +32,7 @@ From the crushing brutality of *Master of Puppets* and *...And Justice for All*,
 
 ---
 
-## ⚡ Architecture: Why Component Separation Matters
+##  Architecture: Why Component Separation Matters
 
 Most neural amp plugins treat the amplifier as a single "black box": you feed audio in, take audio out, and train one neural net on everything.
 
@@ -54,8 +54,8 @@ CrunchyPy mirrors the exact physical signal topology of the amplifier:
      ┌─────────────────────────────────────────────────────────┐
      │  1. Preamp Neural Network (Recurrent GRU, 96 Hidden)    │
      │  • Volume 1 (Pull Bright)      • Treble (Pull Shift)    │
-     │  • Bass (Pull Shift)           • Middle                 │
-     │  • Pull ++ (Mythical Gain Mod) • Lead Drive             │
+     │  • Bass (Pull Shift)           • Middle (Pull ++)       │
+     │  • Lead Drive                  • Pull Deep (Master 1)   │
      │  • Lead Master (Pull Bright)   • PREAMP IN Bypass       │
      └──────────────────────────┬──────────────────────────────┘
                                 │
@@ -70,7 +70,7 @@ CrunchyPy mirrors the exact physical signal topology of the amplifier:
                                 │
                                 ▼
      ┌─────────────────────────────────────────────────────────┐
-     │  3. Master 1 Voltage Divide & Pull Deep Resonance       │
+     │  3. Master 1 Voltage Divide                             │
      └──────────────────────────┬──────────────────────────────┘
                                 │
                                 ▼
@@ -100,6 +100,7 @@ Unlike a Marshall JCM800 or Peavey 5150 where the tone stack sits *after* the pr
 * **BASS & PULL SHIFT (Bass)**: Controls low-end before clipping. **Golden Rule: Keep Bass low (1.5 – 3.0)!** If you crank Bass in the preamp, the tubes will choke on low-frequency mud and fart out. The thunderous low end is added back *after* distortion using the Graphic EQ! Pull Shift changes the bass slope resonance.
 * **MIDDLE**: Controls midrange body and thickness.
 * **PULL ++ (Middle)**: Engages the fabled **Mike Bendinelli "++" factory modification**—re-voicing the intermediate gain stages for a blistering surge in saturation, pick attack, and tight harmonic bite.
+* **PULL DEEP (Master 1)**: Pull Deep engages deep cabinet low-end resonance, adding punch and thud to the entire rig.
 * **LEAD DRIVE**: Dial in the cascading high-gain lead stages. Pushed past 7, it transitions into thick, saturated, harmonic sustain.
 * **LEAD MASTER & PULL BRIGHT**: Controls the lead channel output level into Master 1, with an optional top-end pull bite.
 * **PREAMP IN**: Dedicated toggle switch to bypass the neural preamp (perfect if you want to feed your own hardware preamp pedals or external models into the Mark EQ and poweramp).
@@ -127,7 +128,6 @@ CrunchyPy's EQ filters were calibrated directly against LiveSPICE circuit simula
 
 ### 3. Master 1 & 100W Poweramp Section
 * **MASTER 1**: The physical voltage divider sitting between the preamp/EQ and the poweramp, dictating how hard the power tubes are driven.
-* **PULL DEEP (Master 1)**: Pull Deep engages deep cabinet low-end resonance, adding punch and thud to the entire rig.
 * **100W Poweramp (Neural GRU)**: A 32-hidden-unit neural recurrent model capturing the dynamic sag, transformer saturation, and compression of four 6L6 tubes pushing high-current iron.
 * **PRESENCE**: Negative feedback frequency control in the poweramp stage. Rather than an EQ filter, Presence modulates the power section's feedback loop directly in the neural net.
 * **Level-Aligned Bypass (PWR IN)**: Features automatic **+1.14 dB** nominal volume compensation, so toggling between raw preamp signal and full poweramp never blasts your ears or monitor levels.
@@ -177,18 +177,6 @@ Dialing in a Mark IIC+ is fundamentally different from dialing in a Marshall or 
 * **Presence**: `2.5` *(Rolled back for smooth, vocal warmth)*
 * **Master 1**: `5.5`
 * **Graphic EQ**: Slight smile curve; keep `750 Hz` near `40% – 50%` so the midrange cuts through the mix like a laser.
-
-### 3. '80s Studio Clean & Edge-of-Breakup (Lukather / Prince)
-*Turn the Lead channel off, push the poweramp, and pull the bright switches.*
-* **Volume 1**: `4.5`
-* **Pull Bright (Vol 1)**: **ON**
-* **Treble**: `6.5`
-* **Bass**: `4.5`
-* **Middle**: `5.0`
-* **Lead Drive**: `0.0` (Lead channel off)
-* **Master 1**: `6.0 – 8.0`
-* **Presence**: `5.0`
-* **Graphic EQ**: Flat or subtle high-frequency chime boost at 6600 Hz.
 
 ---
 
@@ -248,7 +236,7 @@ On macOS:
 
 ---
 
-## ⚡ Performance & Audio Engine Specs
+##  Performance & Audio Engine Specs
 
 * **Zero Latency**: Native 48 kHz operation has strictly **0 samples of latency**.
 * **Bandlimited Resampling**: Running at 44.1 kHz, 96 kHz, or 192 kHz? CrunchyPy transparently employs a low-latency Kaiser-sinc resampler ($M=24$) so the neural networks and physical filter tanks always execute on their native 48 kHz clock.
