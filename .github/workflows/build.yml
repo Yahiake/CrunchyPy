@@ -29,18 +29,21 @@ jobs:
             artifact_name: CrunchyPy-Windows-x64
             cmake_args: ''
             build_args: '--config Release'
+            parallel_jobs: 4
             is_windows: true
           - name: Linux
             os: ubuntu-latest
             artifact_name: CrunchyPy-Linux-x64
             cmake_args: '-DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++'
             build_args: '--config Release'
+            parallel_jobs: 2
             is_linux: true
           - name: macOS
             os: macos-latest
             artifact_name: CrunchyPy-macOS
             cmake_args: '-DCMAKE_BUILD_TYPE=Release'
             build_args: '--config Release'
+            parallel_jobs: 4
             is_macos: true
 
     steps:
@@ -48,6 +51,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Setup Swap Space
+        if: matrix.is_linux
+        run: |
+          sudo fallocate -l 4G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
 
       - name: Install Linux Dependencies
         if: matrix.is_linux
@@ -87,7 +99,9 @@ jobs:
           PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
 
       - name: Build
-        run: cmake --build build ${{ matrix.build_args }} --parallel
+        run: cmake --build build ${{ matrix.build_args }} --parallel ${{ matrix.parallel_jobs }}
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: ${{ matrix.parallel_jobs }}
 
       - name: Stage Artifacts (Windows)
         if: matrix.is_windows
