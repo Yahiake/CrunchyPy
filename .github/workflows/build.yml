@@ -1,0 +1,116 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ master, main ]
+    tags:
+      - 'v*'
+      - '[0-9]+.*'
+  release:
+    types: [ published ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+            artifact_name: CrunchyPy-Windows-x64
+            cmake_args: ''
+            build_args: '--config Release'
+            is_windows: true
+          - name: Linux
+            os: ubuntu-latest
+            artifact_name: CrunchyPy-Linux-x64
+            cmake_args: '-DCMAKE_BUILD_TYPE=Release'
+            build_args: '--config Release'
+            is_linux: true
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Linux Dependencies
+        if: matrix.is_linux
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config \
+            fontconfig \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libasound2-dev \
+            libjack-jackd2-dev \
+            libgl1-mesa-dev \
+            libx11-dev \
+            libxinerama-dev \
+            libxext-dev \
+            libxcursor-dev \
+            libxrandr-dev \
+            libxrender-dev \
+            libxcomposite-dev \
+            zip
+
+      - name: Configure CMake
+        run: cmake -B build -S . ${{ matrix.cmake_args }}
+        env:
+          PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+
+      - name: Build
+        run: cmake --build build ${{ matrix.build_args }} --parallel
+
+      - name: Stage Artifacts (Windows)
+        if: matrix.is_windows
+        shell: bash
+        run: |
+          mkdir -p staging
+          cp -r dist/* staging/
+          cd staging && 7z a ../${{ matrix.artifact_name }}.zip *
+
+      - name: Stage Artifacts (Linux)
+        if: matrix.is_linux
+        shell: bash
+        run: |
+          mkdir -p staging
+          find build -type d -name "CrunchyPy.vst3" -exec cp -r {} staging/ \;
+          find build -type f -name "CrunchyPy" -exec cp {} staging/ \;
+          cp packaging/README.txt staging/
+          cd staging && zip -r ../${{ matrix.artifact_name }}.zip *
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_name }}.zip
+
+  release:
+    name: GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*.zip
+          generate_release_notes: true

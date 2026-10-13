@@ -1,0 +1,44 @@
+# Build directories & artifacts
+build/
+bin/
+dist/
+staging/
+out/
+cmake-build-*/
+*.zip
+
+# Visual Studio & IDEs
+.vs/
+*.sln
+*.vcxproj*
+*.user
+*.suo
+.vscode/
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python / PyTorch training artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.pt
+*.pth
+*.onnx
+.pytest_cache/
+runs/
+logs/
+*.log
+*.err
+*.out
+*.pid
+
+# Temporary & scratch files
+tmp/
+scratch/
+dump.txt
+*.wav
+*.mp3
