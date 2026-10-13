@@ -48,6 +48,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            build-essential \
+            gcc \
+            g++ \
+            ninja-build \
             pkg-config \
             fontconfig \
             libfontconfig1-dev \
@@ -64,9 +68,18 @@ jobs:
             libxcomposite-dev \
             zip
 
+      - name: Debug Toolchain
+        if: matrix.is_linux
+        run: |
+          which gcc && gcc --version
+          which g++ && g++ --version
+          cmake --version
+
       - name: Configure CMake
         run: cmake -B build -S . ${{ matrix.cmake_args }}
         env:
+          CC: gcc
+          CXX: g++
           PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
 
       - name: Build
