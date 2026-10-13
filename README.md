@@ -35,7 +35,8 @@ CrunchyPy reflects this exact physical topology. Every stage is modeled independ
 │  Preamp Neural Network (GRU, 13 features, 96 hidden)   │
 │  • Volume 1 (Pull Bright)    • Treble (Pull Shift)     │
 │  • Bass (Pull Shift)         • Middle (Pull ++ Mod)    │
-│  • Lead Drive                • Lead Master (Pull Bright)│
+│  • Lead Drive               • Lead Master (Pull Bright)│
+|  • Pull Deep (Low-End Punch) of Master 1
 └──────────────────────┬─────────────────────────────────┘
                        │
                        ▼
@@ -48,7 +49,7 @@ CrunchyPy reflects this exact physical topology. Every stage is modeled independ
                        │
                        ▼
 ┌────────────────────────────────────────────────────────┐
-│  Master 1 Voltage Divide & Pull Deep (Low-End Punch)   │
+│              Master 1 Voltage Divide                   │
 └──────────────────────┬─────────────────────────────────┘
                        │
                        ▼
@@ -80,6 +81,7 @@ Trained on thousands of circuit state iterations, the preamp uses a custom recur
 * **PULL ++ (Middle)**: Engages the fabled **"++" factory modification** — re-voicing the intermediate gain stages for a tighter, hotter, and more saturated lead response.
 * **LEAD DRIVE**: Controls the gain of the cascading lead drive tube stages.
 * **LEAD MASTER & PULL BRIGHT**: Controls lead channel level with an optional high-frequency edge boost.
+* **PULL DEEP (MASTER 1)**: Pull Deep kicks in heavy cabinet low-end resonance.
 * **PREAMP IN Toggle**: Seamlessly bypasses the preamp stage if you wish to run external preamps into the Mark EQ and poweramp.
 
 ### 2. Physical LC Tank 5-Band Graphic EQ
@@ -100,7 +102,7 @@ Rather than using an idealized textbook filter, CrunchyPy's filters were calibra
 * **EQ IN Toggle**: Independent clean bypass switch.
 
 ### 3. Master 1 & 100W Poweramp Stage
-* **MASTER 1 & PULL DEEP**: Inter-stage voltage divider controlling the drive level into the graphic EQ and power amplifier. Pull Deep kicks in heavy cabinet low-end resonance.
+* **MASTER 1**: Inter-stage voltage divider controlling the drive level into the graphic EQ and power amplifier.
 * **100W 6L6 Poweramp (GRU Network)**: A 32-hidden-unit neural network reproducing the sag, punch, and compression of four 6L6 power tubes driving an output transformer.
 * **PRESENCE**: Negative feedback frequency control in the power amp stage. Controls sizzle and bite directly in the poweramp neural net.
 * **Volume Alignment**: Bypassing the poweramp (`PWR IN` switch) features automatic **+1.14 dB** nominal compensation, so you can test raw preamp signals against full amp tones without startling volume jumps.
@@ -112,24 +114,25 @@ Rather than using an idealized textbook filter, CrunchyPy's filters were calibra
 
 ---
 
-## 🎧 Dialing in the Classic Tones
+##  Dialing in the Classic Tones
 
 If you have never dialed in a real Mesa Mark series amp before, the tone stack can surprise you: **the controls are highly interactive!**
 
 ### 1. The Classic "V-Curve" Thrash Rhythm (*Master of Puppets* / *Justice*)
-* **Volume 1**: `7.0 – 8.0` (Pushed hard)
+* **Volume 1**: `8.0-10` (Pushed hard)
 * **Treble**: `7.5` (Most of the distortion comes from Treble in this circuit!)
+* **Pull Shift (Treble)**: On
 * **Bass**: `2.0` (Keep it low! High bass in the preamp gets muddy. Add bass back with the Graphic EQ!)
 * **Middle**: `3.5`
 * **Lead Drive**: `8.0`
-* **Lead Master**: `3.5`
-* **Master 1**: `4.5`
-* **Presence**: `3.0`
+* **Lead Master**: `7`
+* **Master 1**: `5`
+* **Presence**: `4.5`
 * **Graphic EQ**: Set the classic **"V"**:
   * `80 Hz`: Boosted to ~`80%`
-  * `240 Hz`: Around `65%`
-  * `750 Hz`: Scooped down to `15% – 20%`
-  * `2200 Hz`: Around `65%`
+  * `240 Hz`: Around `50-65%`
+  * `750 Hz`: Scooped down to `10% – 0%`
+  * `2200 Hz`: Around `50-65%`
   * `6600 Hz`: Boosted to ~`80%`
 
 ### 2. Singing Fusion Lead (Santana / Petrucci Solo Tone)
@@ -144,7 +147,7 @@ If you have never dialed in a real Mesa Mark series amp before, the tone stack c
 
 ---
 
-## 🛠 Building from Source
+## Building from Source
 
 ### Prerequisites
 * **CMake** (v3.22 or higher)
@@ -197,7 +200,7 @@ On Linux:
 
 ---
 
-## 🚀 Performance & Real-Time Safety
+## Performance & Real-Time Safety
 
 * **Zero Latency**: Native 48 kHz operation has strictly **0 samples of latency**. 
 * **Bandlimited Resampling**: If your host runs at 44.1 kHz, 96 kHz, or 192 kHz, CrunchyPy transparently employs a low-latency Kaiser-sinc resampler ($M=24$) so the neural networks and physical filter tanks always execute on their native 48 kHz clock.
@@ -206,9 +209,10 @@ On Linux:
 
 ---
 
-## 📜 License & Credits
+## License & Credits
 
 * **Developer**: Yahia Kemari ([@Yahiake](https://github.com/Yahiake))
+* **Circuit Schematics & Analysis**: Special thanks to **Emy** ([@MARKTHERENCE](https://github.com/MARKTHERENCE)) for crafting the detailed LiveSPICE amplifier schematics (preamp, graphic EQ, and 100W power section). Check out their circuit repository: [MARKTHERENCE/LiveSPICE-MK-Circuits](https://github.com/MARKTHERENCE/LiveSPICE-MK-Circuits/tree/main/amps).
 * **Inference Engine**: [RTNeural](https://github.com/Yahiake/RTNeural) by Jatin Chowdhury ([@jatinchowdhury18](https://github.com/jatinchowdhury18))
 * **Framework**: [JUCE 8](https://github.com/juce-framework/JUCE)
 * **License**: Released under the [GNU General Public License v3.0](LICENSE).
