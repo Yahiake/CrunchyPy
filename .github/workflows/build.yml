@@ -33,9 +33,15 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             artifact_name: CrunchyPy-Linux-x64
-            cmake_args: '-DCMAKE_BUILD_TYPE=Release'
+            cmake_args: '-DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++'
             build_args: '--config Release'
             is_linux: true
+          - name: macOS
+            os: macos-latest
+            artifact_name: CrunchyPy-macOS
+            cmake_args: '-DCMAKE_BUILD_TYPE=Release'
+            build_args: '--config Release'
+            is_macos: true
 
     steps:
       - name: Checkout Code
@@ -78,8 +84,6 @@ jobs:
       - name: Configure CMake
         run: cmake -B build -S . ${{ matrix.cmake_args }}
         env:
-          CC: gcc
-          CXX: g++
           PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
 
       - name: Build
@@ -100,6 +104,17 @@ jobs:
           mkdir -p staging
           find build -type d -name "CrunchyPy.vst3" -exec cp -r {} staging/ \;
           find build -type f -name "CrunchyPy" -exec cp {} staging/ \;
+          cp packaging/README.txt staging/
+          cd staging && zip -r ../${{ matrix.artifact_name }}.zip *
+
+      - name: Stage Artifacts (macOS)
+        if: matrix.is_macos
+        shell: bash
+        run: |
+          mkdir -p staging
+          find build -type d -name "CrunchyPy.vst3" -exec cp -r {} staging/ \;
+          find build -type d -name "CrunchyPy.component" -exec cp -r {} staging/ \;
+          find build -type d -name "CrunchyPy.app" -exec cp -r {} staging/ \;
           cp packaging/README.txt staging/
           cd staging && zip -r ../${{ matrix.artifact_name }}.zip *
 

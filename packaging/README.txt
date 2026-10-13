@@ -36,8 +36,8 @@ Bypassing is transparent: the plugin passes audio through unmodified.
 
 Requirements
 ------------
-Windows (x64), or Linux (x64).
-VST3, or Standalone application. No installation step,
+Windows (x64), Linux (x64), or macOS (Apple Silicon & Intel).
+VST3, AU (macOS), or Standalone application. No installation step,
 no system drivers, no network access at runtime.
 
 Licence

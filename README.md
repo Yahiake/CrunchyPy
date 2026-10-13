@@ -6,7 +6,7 @@
 
 Built with modern C++, [JUCE](https://github.com/juce-framework/JUCE), and [RTNeural](https://github.com/Yahiake/RTNeural), **CrunchyPy** is an open-source, component-accurate real-time simulation of the holy grail of high-gain guitar amplification: the **Mesa/Boogie® Mark IIC+**, complete with the factory **"++" hot-rod gain mod**.
 
-Available as **VST3** and **Standalone** on **Windows** and **Linux** (macOS compatible).
+Available as **VST3**, **AU (macOS)**, and **Standalone** on **Windows**, **Linux**, and **macOS** (Apple Silicon & Intel).
 
 ---
 
@@ -224,7 +224,7 @@ sudo apt-get update && sudo apt-get install -y \
   libxcomposite-dev
 ```
 
-### 3. Build (Windows & Linux)
+### 3. Build (Windows, Linux, macOS)
 ```bash
 # Configure
 cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
@@ -241,13 +241,18 @@ On Linux:
 * VST3: `build/CrunchyPy_artefacts/VST3/CrunchyPy.vst3`
 * Standalone: `build/CrunchyPy_artefacts/Standalone/CrunchyPy`
 
+On macOS:
+* AU Component: `build/CrunchyPy_artefacts/AU/CrunchyPy.component`
+* VST3: `build/CrunchyPy_artefacts/VST3/CrunchyPy.vst3`
+* Standalone: `build/CrunchyPy_artefacts/Standalone/CrunchyPy.app`
+
 ---
 
-##  Performance & Audio Engine Specs
+## ⚡ Performance & Audio Engine Specs
 
 * **Zero Latency**: Native 48 kHz operation has strictly **0 samples of latency**.
 * **Bandlimited Resampling**: Running at 44.1 kHz, 96 kHz, or 192 kHz? CrunchyPy transparently employs a low-latency Kaiser-sinc resampler ($M=24$) so the neural networks and physical filter tanks always execute on their native 48 kHz clock.
-* **SIMD Vectorization**: Powered by [RTNeural](https://github.com/Yahiake/RTNeural) with **xsimd** AVX2 vectorization, running full 256-bit SIMD matrix-vector kernels with minimal CPU utilization.
+* **SIMD Vectorization**: Powered by [RTNeural](https://github.com/Yahiake/RTNeural) with **xsimd** AVX2 (x86_64) and NEON (Apple Silicon ARM64) vectorization, executing aligned SIMD matrix-vector kernels with minimal CPU utilization.
 * **Denormal Protection**: Hardware-level FTZ (Flush-To-Zero) and DAZ (Denormals-Are-Zero) protection throughout the entire signal chain.
 
 ---
