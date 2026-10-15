@@ -262,7 +262,7 @@ On macOS:
   [JUCE 8](https://github.com/juce-framework/JUCE).
 
 * **License**:  
-  Released under the [GNU General Public License v3.0](LICENSE).
+  Released under the [GNU AFFERO GENERAL PUBLIC LICENSE V3](LICENSE).
 
 ---
 
